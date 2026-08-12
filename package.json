@@ -2,19 +2,53 @@
   "name": "mine-sweeper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "pnpm --filter @mine-sweeper/web dev",
+    "typecheck": "pnpm -r run typecheck",
+    "build": "pnpm --filter @mine-sweeper/web build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "check:architecture": "depcruise --config dependency-cruiser.config.mjs apps packages",
+    "check:unused": "knip",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:architecture && pnpm check:unused && pnpm test && pnpm build",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.3.0",
-      "onFail": "download"
-    }
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,html,css}": [
+      "prettier --write"
+    ]
   },
-  "type": "module"
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
+    "dependency-cruiser": "18.2.0",
+    "eslint": "10.8.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.4",
+    "globals": "17.10.0",
+    "husky": "9.1.7",
+    "jsdom": "30.0.1",
+    "knip": "6.32.2",
+    "lint-staged": "17.3.0",
+    "prettier": "3.9.6",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.67.0",
+    "vitest": "4.1.10"
+  }
 }

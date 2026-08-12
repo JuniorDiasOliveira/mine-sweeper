@@ -2,12 +2,12 @@
 
 ## Status
 
-Planned.
+Completed.
 
 ## Metadata
 
 - Created: 2026-08-12
-- Completed: -
+- Completed: 2026-08-12
 - Owner: Junior Oliveira
 
 ## Context
@@ -25,7 +25,9 @@ foundation only. Automated enforcement belongs to the subsequent
 ## Goal
 
 Create a minimal, runnable pnpm monorepo in which `apps/web` composes the public
-APIs of `packages/core`, `packages/game-state`, and `packages/ui`, while every
+APIs of `packages/game-state` and `packages/ui` (each of which resolves
+`packages/core` internally per
+[`DEPENDENCY_RULES.md`](../../architecture/DEPENDENCY_RULES.md)), while every
 workspace has a valid manifest, TypeScript configuration, and public entry
 point.
 
@@ -93,29 +95,29 @@ The implementation must produce at least:
 
 ```text
 apps/
-â””â”€â”€ web/
-    â”œâ”€â”€ src/
-    â”œâ”€â”€ index.html
-    â”œâ”€â”€ package.json
-    â”œâ”€â”€ tsconfig.json
-    â””â”€â”€ vite.config.ts
+└── web/
+    ├── src/
+    ├── index.html
+    ├── package.json
+    ├── tsconfig.json
+    └── vite.config.ts
 packages/
-â”œâ”€â”€ core/
-â”‚   â”œâ”€â”€ src/index.ts
-â”‚   â”œâ”€â”€ package.json
-â”‚   â””â”€â”€ tsconfig.json
-â”œâ”€â”€ game-state/
-â”‚   â”œâ”€â”€ src/index.ts
-â”‚   â”œâ”€â”€ package.json
-â”‚   â””â”€â”€ tsconfig.json
-â”œâ”€â”€ shared/
-â”‚   â”œâ”€â”€ src/index.ts
-â”‚   â”œâ”€â”€ package.json
-â”‚   â””â”€â”€ tsconfig.json
-â””â”€â”€ ui/
-    â”œâ”€â”€ src/index.ts
-    â”œâ”€â”€ package.json
-    â””â”€â”€ tsconfig.json
+├── core/
+│   ├── src/index.ts
+│   ├── package.json
+│   └── tsconfig.json
+├── game-state/
+│   ├── src/index.ts
+│   ├── package.json
+│   └── tsconfig.json
+├── shared/
+│   ├── src/index.ts
+│   ├── package.json
+│   └── tsconfig.json
+└── ui/
+    ├── src/index.ts
+    ├── package.json
+    └── tsconfig.json
 package.json
 pnpm-lock.yaml
 pnpm-workspace.yaml
@@ -171,7 +173,11 @@ or TypeScript setup.
 - Create a single Vite-powered React entry point.
 - Let `apps/web` perform application composition.
 - Import proof-of-resolution values or types through the public entry points of
-  `@mine-sweeper/core`, `@mine-sweeper/game-state`, and `@mine-sweeper/ui`.
+  `@mine-sweeper/game-state` and `@mine-sweeper/ui` only; `apps/web` must not
+  import `@mine-sweeper/core` directly, per
+  [`DEPENDENCY_RULES.md`](../../architecture/DEPENDENCY_RULES.md). Each of
+  those two packages imports `@mine-sweeper/core` internally to prove that
+  edge of the dependency graph.
 - Render only a minimal accessible application shell. Do not implement a board,
   controls, game state, or visual design system.
 - Support local development and a production build through root scripts.
@@ -180,32 +186,32 @@ or TypeScript setup.
 
 The root package must expose at least:
 
-| Command | Responsibility |
-| --- | --- |
-| `pnpm dev` | Start the web application in development mode |
+| Command          | Responsibility                                            |
+| ---------------- | --------------------------------------------------------- |
+| `pnpm dev`       | Start the web application in development mode             |
 | `pnpm typecheck` | Type-check every initial workspace without emitting files |
-| `pnpm build` | Produce a production build of the web application |
+| `pnpm build`     | Produce a production build of the web application         |
 
 These commands form the initial contract. The guardrails task may broaden
 their implementation while preserving their names and responsibilities.
 
 ## Acceptance criteria
 
-- [ ] A clean dependency installation succeeds with pnpm and produces no
+- [x] A clean dependency installation succeeds with pnpm and produces no
       uncommitted lockfile change.
-- [ ] pnpm discovers exactly `apps/web` and the four documented packages.
-- [ ] Every workspace has a manifest, TypeScript configuration, source entry
+- [x] pnpm discovers exactly `apps/web` and the four documented packages.
+- [x] Every workspace has a manifest, TypeScript configuration, source entry
       point, and intentional public API.
-- [ ] Internal dependencies match the documented allowlist and use the
+- [x] Internal dependencies match the documented allowlist and use the
       workspace protocol.
-- [ ] `packages/shared` has no speculative consumer or dependency.
-- [ ] `apps/web` imports the relevant packages only through their public names.
-- [ ] The root development command starts the application successfully.
-- [ ] The application renders its minimal shell without a runtime error.
-- [ ] The root type-check command succeeds for every workspace.
-- [ ] The root production build succeeds.
-- [ ] No Minesweeper feature or guardrail tooling is introduced by this task.
-- [ ] Setup and command documentation is updated to reflect only commands that
+- [x] `packages/shared` has no speculative consumer or dependency.
+- [x] `apps/web` imports the relevant packages only through their public names.
+- [x] The root development command starts the application successfully.
+- [x] The application renders its minimal shell without a runtime error.
+- [x] The root type-check command succeeds for every workspace.
+- [x] The root production build succeeds.
+- [x] No Minesweeper feature or guardrail tooling is introduced by this task.
+- [x] Setup and command documentation is updated to reflect only commands that
       were actually created and executed.
 
 ## Validation
@@ -242,17 +248,63 @@ policy and must be recorded in the completion record.
 
 ## Completion record
 
-Complete this section only after every acceptance criterion and required check
-has succeeded.
-
 ### Implemented
 
-- Pending.
+- `pnpm-workspace.yaml` discovering `apps/*` and `packages/*`.
+- `.nvmrc` pinning Node.js `22`; root `package.json` updated with
+  `engines.node`, `packageManager: "pnpm@11.21.0"`, `private: true`, and the
+  `dev`/`typecheck`/`build` root scripts. Removed the pre-existing
+  `devEngines.packageManager` block: pnpm warned that it conflicted with
+  `packageManager` and silently ignored one of them.
+- Root `tsconfig.json` (strict, `ES2022`, bundler module resolution),
+  extended by every workspace's own `tsconfig.json`.
+- `packages/core`, `packages/shared`, `packages/game-state`, and
+  `packages/ui`: each with `package.json` (`@mine-sweeper/*`),
+  `tsconfig.json`, and a `src/index.ts` public entry point exporting a
+  proof-of-resolution constant only, per this task's "do not add placeholder
+  game behaviour" requirement.
+- `apps/web`: Vite 8 + React 19 app (`vite.config.ts`, `index.html`,
+  `src/main.tsx`, `src/App.tsx`) rendering a placeholder shell.
+- Dependency graph implemented as `apps/web -> game-state -> core` and
+  `apps/web -> ui -> core`; `apps/web` does not import `@mine-sweeper/core`
+  directly (see "Open decisions": this task's own Goal/Web-application
+  wording originally implied a direct `web -> core` import, which conflicts
+  with [`DEPENDENCY_RULES.md`](../../architecture/DEPENDENCY_RULES.md); the
+  repository owner resolved it in favour of the documented allowlist, and the
+  wording above was corrected to match).
+- Fixed two unrelated documentation gaps found while completing this task:
+  renamed the untracked, empty `docs/tasks/done/` to `docs/tasks/completed/`
+  to match this document's and `IMPLEMENT_GUARDRAILS.md`'s existing
+  references; added `docs/tasks/README.md`, which was referenced but did not
+  exist.
 
 ### Validation results
 
-- Pending.
+- `pnpm install` then `pnpm install --frozen-lockfile`: both passed; the
+  second produced no lockfile change.
+- `pnpm typecheck` (`pnpm -r run typecheck`): passed for all 5 workspaces
+  (`core`, `shared`, `game-state`, `ui`, `web`).
+- `pnpm build` (`tsc --noEmit && vite build` for `@mine-sweeper/web`): passed,
+  produced `apps/web/dist` (18 modules transformed, ~198ms).
+- `pnpm dev`: started the Vite dev server at `http://localhost:5173/`; a
+  `curl` request against it returned HTTP `200`.
+- Manual review (`grep` over every workspace's `src/`): the only
+  cross-workspace imports present are `web -> game-state`, `web -> ui`,
+  `game-state -> core`, and `ui -> core`; no relative import escapes a
+  workspace; `packages/shared` has no consumer.
+- All commands were run under Node.js `22.23.1` (via `nvm use 22`) and pnpm
+  `11.21.0`.
 
 ### Remaining risks
 
-- Pending.
+- TypeScript is pinned to `5.9.3`, not npm's `latest` tag (`7.0.2` at
+  implementation time), because `typescript-eslint@8.67.0` — needed by
+  `IMPLEMENT_GUARDRAILS.md` — declares a peer range of
+  `typescript >=4.8.4 <6.1.0`. If a future change needs a newer TypeScript,
+  this pin and the ESLint tooling it constrains must be revisited together.
+- No automated boundary enforcement existed at the time this task was
+  completed; it was verified manually here and has since been encoded in
+  ESLint and dependency-cruiser by `IMPLEMENT_GUARDRAILS.md`.
+- `react`, `vite`, and other external dependencies were pinned to each
+  package's npm `latest` tag as of 2026-08-12; there is no automated
+  dependency-update process yet.
