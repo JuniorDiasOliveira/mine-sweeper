@@ -75,4 +75,6 @@ ones.
 - Do not invent requirements that are absent from the task or documentation.
 - Do not perform unrelated refactors while implementing a focused task.
 
-Exact tool commands will be added when the workspace tooling is configured.
+The exact commands are documented in
+[`GETTING_STARTED.md`](../development/GETTING_STARTED.md). `pnpm check` runs
+every configured non-E2E check; CI is not configured yet.

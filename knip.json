@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {},
+    "apps/web": {},
+    "packages/core": {},
+    "packages/shared": {},
+    "packages/game-state": {
+      "ignoreDependencies": ["react", "@types/react"]
+    },
+    "packages/ui": {
+      "ignoreDependencies": ["react", "@types/react"]
+    }
+  }
+}

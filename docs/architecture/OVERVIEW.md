@@ -20,13 +20,13 @@ mine-sweeper/
     └── shared/
 ```
 
-| Workspace | Responsibility |
-| --- | --- |
-| `apps/web` | Start the browser application and compose state with UI. |
-| `packages/core` | Implement pure Minesweeper rules and domain types. |
+| Workspace             | Responsibility                                                               |
+| --------------------- | ---------------------------------------------------------------------------- |
+| `apps/web`            | Start the browser application and compose state with UI.                     |
+| `packages/core`       | Implement pure Minesweeper rules and domain types.                           |
 | `packages/game-state` | Coordinate game state, expose observable snapshots, and provide React hooks. |
-| `packages/ui` | Render presentational React components from props. |
-| `packages/shared` | Hold small, domain-independent utilities used by more than one workspace. |
+| `packages/ui`         | Render presentational React components from props.                           |
+| `packages/shared`     | Hold small, domain-independent utilities used by more than one workspace.    |
 
 ## Responsibility flow
 

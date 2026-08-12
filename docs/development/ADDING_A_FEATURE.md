@@ -20,13 +20,13 @@ choose product behaviour merely to unblock implementation.
 
 Assign every part of the change to the package that owns that responsibility:
 
-| Change | Owner |
-| --- | --- |
-| Minesweeper rules or domain types | `packages/core` |
-| Observable state, commands, snapshots, or React store hooks | `packages/game-state` |
-| Presentational components and styles | `packages/ui` |
-| Application composition and store lifetime | `apps/web` |
-| Proven domain-independent utility used by multiple workspaces | `packages/shared` |
+| Change                                                        | Owner                 |
+| ------------------------------------------------------------- | --------------------- |
+| Minesweeper rules or domain types                             | `packages/core`       |
+| Observable state, commands, snapshots, or React store hooks   | `packages/game-state` |
+| Presentational components and styles                          | `packages/ui`         |
+| Application composition and store lifetime                    | `apps/web`            |
+| Proven domain-independent utility used by multiple workspaces | `packages/shared`     |
 
 A feature may require changes in more than one package. That does not permit a
 responsibility to be implemented in the wrong package.

@@ -53,5 +53,9 @@ reported as fully verified. The final report must identify:
 - the narrower validation that was performed;
 - the remaining risk.
 
-Exact validation commands will be added after the workspace tooling is
-configured.
+The exact validation commands are documented in
+[`GETTING_STARTED.md`](../development/GETTING_STARTED.md). CI is not
+configured yet (no GitHub remote exists), so it cannot be one of the checks
+reported as run until
+[`IMPLEMENT_GUARDRAILS.md`](../tasks/planned/IMPLEMENT_GUARDRAILS.md)'s CI
+section is complete.

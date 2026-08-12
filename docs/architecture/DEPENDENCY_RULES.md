@@ -6,13 +6,13 @@ Define and enforce the allowed dependency direction between applications and pac
 
 ## Allowed workspace dependencies
 
-| Consumer | May depend on |
-| --- | --- |
-| `apps/web` | `packages/game-state`, `packages/ui`, and their public contracts |
-| `packages/game-state` | `packages/core`; `packages/shared` when justified |
-| `packages/ui` | public domain types from `packages/core`; `packages/shared` when justified |
-| `packages/core` | `packages/shared` when justified |
-| `packages/shared` | external dependencies that preserve its domain-independent role |
+| Consumer              | May depend on                                                              |
+| --------------------- | -------------------------------------------------------------------------- |
+| `apps/web`            | `packages/game-state`, `packages/ui`, and their public contracts           |
+| `packages/game-state` | `packages/core`; `packages/shared` when justified                          |
+| `packages/ui`         | public domain types from `packages/core`; `packages/shared` when justified |
+| `packages/core`       | `packages/shared` when justified                                           |
+| `packages/shared`     | external dependencies that preserve its domain-independent role            |
 
 The table is an allowlist. A dependency not described here is forbidden until
 the architecture documentation is intentionally changed.
@@ -60,9 +60,16 @@ Before adding a dependency:
 
 ## Enforcement
 
-These boundaries must eventually be checked by automated linting and
-dependency-graph validation. Git hooks provide early feedback, while CI is the
-authoritative check because local hooks can be skipped.
+These boundaries are checked automatically by `pnpm lint` (ESLint
+`no-restricted-imports`, in [`eslint.config.js`](../../eslint.config.js)) and
+`pnpm check:architecture` (dependency-cruiser, in
+[`dependency-cruiser.config.mjs`](../../dependency-cruiser.config.mjs)), both
+added by [`IMPLEMENT_GUARDRAILS.md`](../tasks/planned/IMPLEMENT_GUARDRAILS.md).
+The pre-commit hook runs ESLint on staged files; the pre-push hook runs
+`pnpm check`, which includes both checks.
 
-Until those checks are configured, code review must apply this document
-manually. A missing automated rule does not make a forbidden dependency valid.
+Local hooks can be skipped with `--no-verify`, so they provide early feedback,
+not the authoritative check. CI is meant to be that authoritative layer, but
+it is not configured yet: there is no GitHub remote for it to run against.
+Until CI exists, code review must still apply this document manually — a
+passing local check does not guarantee the same check ran before merge.

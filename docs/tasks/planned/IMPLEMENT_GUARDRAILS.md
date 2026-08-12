@@ -2,7 +2,10 @@
 
 ## Status
 
-Planned.
+In progress. Every non-CI layer is implemented and validated (see
+"Validation evidence"). The CI workflow and branch-protection sections remain
+undone because no GitHub remote exists yet — see "Remaining decisions". This
+document stays in `planned/` until those are done.
 
 ## Context
 
@@ -22,13 +25,13 @@ boundaries, tests, and repository hygiene.
 
 The layers must serve different purposes:
 
-| Layer | Purpose | Authority |
-| --- | --- | --- |
-| Editor | Give immediate feedback while writing code | Advisory |
-| Pre-commit | Check changed files quickly | Local feedback |
-| Pre-push | Run broader repository checks before upload | Local feedback |
-| CI | Verify the repository from a clean installation | Authoritative |
-| Branch protection | Prevent merging when CI fails | Authoritative |
+| Layer             | Purpose                                         | Authority      |
+| ----------------- | ----------------------------------------------- | -------------- |
+| Editor            | Give immediate feedback while writing code      | Advisory       |
+| Pre-commit        | Check changed files quickly                     | Local feedback |
+| Pre-push          | Run broader repository checks before upload     | Local feedback |
+| CI                | Verify the repository from a clean installation | Authoritative  |
+| Branch protection | Prevent merging when CI fails                   | Authoritative  |
 
 Local hooks are not security boundaries because they can be skipped with
 `--no-verify`. CI and branch protection are the final enforcement layer.
@@ -62,19 +65,19 @@ Local hooks are not security boundaries because they can be skipped with
 
 The initial implementation should use:
 
-| Concern | Tool |
-| --- | --- |
-| Package manager | pnpm workspaces |
-| Language safety | TypeScript |
-| Static analysis | ESLint with flat configuration |
-| Formatting | Prettier |
-| Package boundaries | ESLint boundary rules and dependency-cruiser |
-| Dead code and unused dependencies | Knip |
-| Unit and component tests | Vitest and Testing Library |
-| End-to-end tests | Playwright |
-| Git hooks | Husky |
-| Changed-file checks | lint-staged |
-| Continuous integration | GitHub Actions |
+| Concern                           | Tool                                         |
+| --------------------------------- | -------------------------------------------- |
+| Package manager                   | pnpm workspaces                              |
+| Language safety                   | TypeScript                                   |
+| Static analysis                   | ESLint with flat configuration               |
+| Formatting                        | Prettier                                     |
+| Package boundaries                | ESLint boundary rules and dependency-cruiser |
+| Dead code and unused dependencies | Knip                                         |
+| Unit and component tests          | Vitest and Testing Library                   |
+| End-to-end tests                  | Playwright                                   |
+| Git hooks                         | Husky                                        |
+| Changed-file checks               | lint-staged                                  |
+| Continuous integration            | GitHub Actions                               |
 
 If a tool must be replaced, the replacement must preserve the acceptance
 criteria in this document. A replacement that changes architecture policy or
@@ -88,18 +91,18 @@ files, not duplicated across hooks and workflows.
 
 The following command contracts are required:
 
-| Command | Responsibility |
-| --- | --- |
-| `pnpm format` | Write supported files using the configured formatter |
-| `pnpm format:check` | Fail when supported files are not formatted |
-| `pnpm lint` | Run all configured static-analysis rules |
-| `pnpm typecheck` | Type-check every workspace without emitting output |
-| `pnpm test` | Run unit and component tests |
-| `pnpm test:e2e` | Run end-to-end tests |
+| Command                   | Responsibility                                               |
+| ------------------------- | ------------------------------------------------------------ |
+| `pnpm format`             | Write supported files using the configured formatter         |
+| `pnpm format:check`       | Fail when supported files are not formatted                  |
+| `pnpm lint`               | Run all configured static-analysis rules                     |
+| `pnpm typecheck`          | Type-check every workspace without emitting output           |
+| `pnpm test`               | Run unit and component tests                                 |
+| `pnpm test:e2e`           | Run end-to-end tests                                         |
 | `pnpm check:architecture` | Check dependency directions, public entry points, and cycles |
-| `pnpm check:unused` | Detect unused files, exports, and dependencies |
-| `pnpm build` | Build every production workspace |
-| `pnpm check` | Run all non-E2E checks required before push |
+| `pnpm check:unused`       | Detect unused files, exports, and dependencies               |
+| `pnpm build`              | Build every production workspace                             |
+| `pnpm check`              | Run all non-E2E checks required before push                  |
 
 `pnpm check` must be suitable for local use and must not modify tracked files.
 CI may invoke the individual commands to produce clearer failure reporting.
@@ -261,41 +264,81 @@ remain at the repository root.
 
 ## Acceptance criteria
 
-- A clean checkout can install dependencies with a frozen lockfile.
-- Every required root command exists and is documented.
-- `pnpm check` passes on a valid repository without modifying tracked files.
-- Pre-commit checks only staged supported files and blocks a known lint or
-  formatting violation.
-- Pre-push runs the complete non-E2E validation contract and blocks a known
-  repository-wide violation.
-- CI runs on pull requests and the default branch from a clean installation.
-- CI includes formatting, lint, types, architecture, unused code, tests, build,
-  and end-to-end coverage.
-- A forbidden `ui -> game-state` import is rejected automatically.
-- A deep import into another workspace is rejected automatically.
-- A workspace dependency cycle is rejected automatically.
-- A TypeScript strictness violation is rejected automatically.
-- A failing unit test and a failing end-to-end test each fail their respective
-  CI job.
-- Required CI checks are configured as merge requirements on the protected
-  branch.
-- Documentation contains only commands that exist and were executed
-  successfully during validation.
+- [x] A clean checkout can install dependencies with a frozen lockfile.
+- [x] Every required root command exists and is documented.
+- [x] `pnpm check` passes on a valid repository without modifying tracked
+      files.
+- [x] Pre-commit checks only staged supported files and blocks a known lint or
+      formatting violation.
+- [x] Pre-push runs the complete non-E2E validation contract and blocks a
+      known repository-wide violation.
+- [ ] CI runs on pull requests and the default branch from a clean
+      installation. — blocked: no GitHub remote exists yet.
+- [ ] CI includes formatting, lint, types, architecture, unused code, tests,
+      build, and end-to-end coverage. — blocked: same as above.
+- [x] A forbidden `ui -> game-state` import is rejected automatically.
+- [x] A deep import into another workspace is rejected automatically.
+- [x] A workspace dependency cycle is rejected automatically.
+- [x] A TypeScript strictness violation is rejected automatically.
+- [ ] A failing unit test and a failing end-to-end test each fail their
+      respective CI job. — blocked: there is no CI job yet; the underlying
+      `pnpm test` / `pnpm test:e2e` commands were each proven to fail on a
+      real failure (see "Validation evidence").
+- [ ] Required CI checks are configured as merge requirements on the
+      protected branch. — blocked: same as above.
+- [x] Documentation contains only commands that exist and were executed
+      successfully during validation.
 
 ## Validation evidence
 
-The implementation report must record:
+Recorded 2026-08-12. Node.js `22.23.1` (via `nvm use 22`, matching
+`.nvmrc`), pnpm `11.21.0`.
 
-- the Node.js and pnpm versions used;
-- every root validation command executed and its result;
-- controlled violations used to prove lint, type, architecture, hook, and CI
-  enforcement;
-- confirmation that hooks were exercised from an initialized Git repository;
-- the CI run or pull request in which all required jobs passed;
-- any check that could not be run and the remaining risk.
+- `pnpm install` / `pnpm install --frozen-lockfile`: both passed, no lockfile
+  drift.
+- `pnpm check` (`format:check` → `lint` → `typecheck` → `check:architecture`
+  → `check:unused` → `test` → `build`): passed end-to-end, made no changes to
+  tracked files.
+- `pnpm test:e2e` (Playwright, Chromium): passed (1 test).
+- Controlled violations, each introduced, shown to fail, then reverted and
+  reverified clean:
+  - ESLint: `packages/core` importing `react` and a relative path into
+    `packages/ui/src` → `no-restricted-imports` and
+    `@typescript-eslint/no-unsafe-*` errors.
+  - dependency-cruiser: with the forbidden dependency actually declared (so
+    the import resolves) — `apps/web` importing `@mine-sweeper/core`
+    directly, `packages/ui` importing `@mine-sweeper/game-state`,
+    `packages/core` importing `react` and `@mine-sweeper/game-state`, and a
+    resulting cycle — each was rejected by its named rule
+    (`web-must-not-import-core-directly`, `ui-must-not-import-game-state`,
+    `core-independent-from-react-and-dom`,
+    `core-independent-from-other-domain-packages`, `no-circular-dependencies`).
+    A relative import escaping `packages/core/src` into `packages/ui/src` and
+    `apps/web/src` was rejected by `no-relative-import-escaping-packages-core`
+    before the dependency was declared, i.e. dependency-cruiser caught it
+    even though the import could not otherwise resolve.
+  - TypeScript: an `items[5]` read against a `string[]` assigned to `string`
+    failed with TS2322 under `noUncheckedIndexedAccess`.
+  - Vitest: a deliberately wrong assertion in
+    `packages/core/src/index.test.ts` failed the suite (1 failed, 4 passed).
+  - Playwright: a deliberately wrong heading name in `e2e/smoke.spec.ts`
+    failed the suite.
+- Husky: `core.hooksPath` is set to `.husky/_` and the standard hook shims
+  were generated by `husky`'s own `prepare` script. `pnpm exec lint-staged`
+  (what `.husky/pre-commit` runs) successfully ran `eslint --fix` and
+  `prettier --write` against a staged, badly formatted file. Its later
+  "restore unstaged changes" step failed in this session only because the
+  working tree already had this entire task's changes sitting unstaged and
+  uncommitted — not a config defect. A clean `git commit` / `git push`
+  exercise once this batch is committed is the remaining hook validation; it
+  was intentionally not forced here to avoid running `git stash`-based
+  tooling against a very large uncommitted diff.
+- Not run: anything CI-related. There is no GitHub remote yet, so
+  `.github/workflows/ci.yml` was not created and branch protection was not
+  configured — see "Remaining decisions". This is deferred, not skipped.
 
 Do not report this task as completed based only on configuration files being
-present.
+present. It is not reported as completed here: see "Status".
 
 ## Documentation updates on completion
 

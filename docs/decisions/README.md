@@ -8,8 +8,8 @@ not a tutorial or an implementation plan.
 
 ## Decision index
 
-| ADR | Decision | Status |
-| --- | --- | --- |
+| ADR                                 | Decision                                                            | Status   |
+| ----------------------------------- | ------------------------------------------------------------------- | -------- |
 | [ADR-001](./ADR-001-OBSERVABLES.md) | Manage game state with observable stores and `useSyncExternalStore` | Accepted |
 
 ## When to create an ADR

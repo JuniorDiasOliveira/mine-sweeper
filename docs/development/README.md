@@ -23,6 +23,10 @@ Coding agents must additionally follow the instructions in
 
 ## Current status
 
-The workspace toolchain has not been initialized yet. Commands and tool-specific
-instructions must not be guessed. They will be documented here when their
-configuration is committed to the repository.
+The workspace toolchain is initialized: pnpm workspaces, TypeScript, Prettier,
+ESLint, dependency-cruiser, Vitest, Knip, Husky, and Playwright are all
+configured. See [Getting started](./GETTING_STARTED.md) for the commands.
+
+CI and branch protection are not configured yet: there is no GitHub remote
+for them to run against. See
+[`IMPLEMENT_GUARDRAILS.md`](../tasks/planned/IMPLEMENT_GUARDRAILS.md).

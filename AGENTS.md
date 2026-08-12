@@ -65,9 +65,13 @@ a higher-authority instruction.
 
 ## Validation and completion
 
-Run every configured check applicable to the change. Repository commands will
-be documented after the toolchain is initialized; do not invent commands that
-do not exist in the repository.
+Run every configured check applicable to the change. The repository commands
+are documented in
+[`docs/development/GETTING_STARTED.md`](./docs/development/GETTING_STARTED.md);
+do not invent commands that do not exist there. `pnpm check` runs every
+non-E2E check and is safe to run before pushing; CI is not configured yet
+(see
+[`docs/tasks/planned/IMPLEMENT_GUARDRAILS.md`](./docs/tasks/planned/IMPLEMENT_GUARDRAILS.md)).
 
 Before reporting completion, apply
 [`docs/agent/DEFINITION_OF_DONE.md`](./docs/agent/DEFINITION_OF_DONE.md). Report

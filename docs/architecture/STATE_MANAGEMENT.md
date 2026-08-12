@@ -58,7 +58,7 @@ export function useGameStore(store: GameStore): GameSnapshot {
   return useSyncExternalStore(
     store.subscribe,
     store.getSnapshot,
-    store.getSnapshot
+    store.getSnapshot,
   );
 }
 ```

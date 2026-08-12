@@ -10,3 +10,8 @@ node_modules
 psd
 thumb
 sketch
+
+dist
+coverage
+playwright-report
+test-results

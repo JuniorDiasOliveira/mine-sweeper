@@ -87,7 +87,23 @@ passes after it. Place the test in the layer that owns the faulty behaviour.
 
 ## Required commands
 
-The test runner and commands have not been configured yet. Add the exact local
-and CI commands here only after they exist in the repository. Until then, a
-change must report which narrower checks were performed and which verification
-remains unavailable.
+- `pnpm test` runs unit and component tests with Vitest and Testing Library,
+  discovering `*.test.{ts,tsx}` files across every package and app.
+- `pnpm test:e2e` runs the Playwright suite in `e2e/`, starting the `apps/web`
+  dev server automatically.
+
+## End-to-end policy
+
+End-to-end tests run in CI only, decided 2026-08-12. The pre-push hook runs
+`pnpm check`, which does not include `pnpm test:e2e`, so pre-push stays fast.
+CI is not configured yet (see
+[`IMPLEMENT_GUARDRAILS.md`](../tasks/planned/IMPLEMENT_GUARDRAILS.md)); until
+it is, `pnpm test:e2e` must be run manually before relying on end-to-end
+coverage.
+
+Only one smoke test exists today (`e2e/smoke.spec.ts`), asserting that
+`apps/web` starts and renders its placeholder shell. It is not a substitute
+for the essential-flow coverage (start a game, reveal a cell, win, lose, and
+so on) that
+[`IMPLEMENT_GAME_E2E.md`](../tasks/planned/IMPLEMENT_GAME_E2E.md) must add
+once the game exists.
