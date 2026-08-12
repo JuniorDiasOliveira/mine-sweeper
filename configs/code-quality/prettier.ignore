@@ -1,3 +1,4 @@
+# Generated and external files excluded from code-quality formatting
 node_modules
 dist
 coverage

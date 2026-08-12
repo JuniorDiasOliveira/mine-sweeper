@@ -20,7 +20,7 @@ Before product features or repository guardrails can be implemented, the
 project needs a minimal pnpm workspace containing the web application and the
 four packages defined by the accepted architecture. This task creates that
 foundation only. Automated enforcement belongs to the subsequent
-[`IMPLEMENT_GUARDRAILS.md`](./IMPLEMENT_GUARDRAILS.md) task.
+[`IMPLEMENT_GUARDRAILS.md`](../planned/IMPLEMENT_GUARDRAILS.md) task.
 
 ## Goal
 

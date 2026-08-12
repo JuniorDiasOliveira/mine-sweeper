@@ -248,19 +248,29 @@ implementation is expected to include equivalents of:
 .github/workflows/ci.yml
 .husky/pre-commit
 .husky/pre-push
-configs/typescript/
-dependency-cruiser.config.*
-eslint.config.*
+configs/
+├── code-quality/
+│   ├── eslint.config.*
+│   ├── prettier.config.*
+│   └── prettier.ignore
+├── static-analysis/
+│   ├── dependency-cruiser.config.*
+│   └── knip.json
+├── testing/
+│   ├── playwright.config.*
+│   └── vitest.config.*
+└── typescript/
 package.json
 pnpm-lock.yaml
 pnpm-workspace.yaml
-prettier.config.*
 tsconfig.json
 ```
 
-Tool configuration shared by workspaces should live in `configs/` when it is a
-real reusable configuration package or preset. Root-only configuration should
-remain at the repository root.
+Tool configuration shared by workspaces should live in `configs/`, grouped by
+responsibility: code quality, static analysis, testing, or language tooling.
+Workspace-specific configuration should remain with the workspace that owns
+it. Conventional repository entry points remain at the root when their tools
+discover them there directly.
 
 ## Acceptance criteria
 
@@ -358,7 +368,7 @@ When this task is complete:
 Confirmed by the repository owner on 2026-08-12:
 
 - Node.js version: 22, pinned via `.nvmrc` in
-  [`IMPLEMENT_WORKSPACE_FOUNDATION.md`](./IMPLEMENT_WORKSPACE_FOUNDATION.md).
+  [`IMPLEMENT_WORKSPACE_FOUNDATION.md`](../completed/IMPLEMENT_WORKSPACE_FOUNDATION.md).
 - Default branch name: `main`.
 - End-to-end tests run in CI only. The pre-push hook stays limited to the
   non-E2E `pnpm check` contract defined above; `pnpm test:e2e` is not part of

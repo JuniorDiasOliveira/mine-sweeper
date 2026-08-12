@@ -61,9 +61,12 @@ Before adding a dependency:
 ## Enforcement
 
 These boundaries are checked automatically by `pnpm lint` (ESLint
-`no-restricted-imports`, in [`eslint.config.js`](../../eslint.config.js)) and
+`no-restricted-imports`, in
+[`configs/code-quality/eslint.config.js`](../../configs/code-quality/eslint.config.js))
+and
 `pnpm check:architecture` (dependency-cruiser, in
-[`dependency-cruiser.config.mjs`](../../dependency-cruiser.config.mjs)), both
+[`configs/static-analysis/dependency-cruiser.config.mjs`](../../configs/static-analysis/dependency-cruiser.config.mjs)),
+both
 added by [`IMPLEMENT_GUARDRAILS.md`](../tasks/planned/IMPLEMENT_GUARDRAILS.md).
 The pre-commit hook runs ESLint on staged files; the pre-push hook runs
 `pnpm check`, which includes both checks.
