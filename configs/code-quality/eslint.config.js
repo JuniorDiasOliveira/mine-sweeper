@@ -2,8 +2,10 @@ import js from '@eslint/js';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
+import { fileURLToPath } from 'node:url';
 import tseslint from 'typescript-eslint';
 
+const REPOSITORY_ROOT = fileURLToPath(new URL('../..', import.meta.url));
 const SRC_FILES = ['packages/*/src/**/*.{ts,tsx}', 'apps/*/src/**/*.{ts,tsx}'];
 
 // ESLint's no-restricted-imports keeps only the last config that sets it for
@@ -63,7 +65,7 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: REPOSITORY_ROOT,
       },
     },
   },
@@ -87,7 +89,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['*.config.{js,ts,mjs}'],
+    files: ['**/*.config.{js,ts,mjs}'],
     languageOptions: {
       globals: globals.node,
     },

@@ -29,11 +29,14 @@ packages/
   game-state/          Observable store and React integration
   ui/                  Presentational components
   shared/              Proven cross-package utilities
+configs/               Shared tooling grouped by responsibility
 docs/                  Architecture, decisions, guides, and tasks
 ```
 
 The directories describe responsibility, not merely file organization. Review
 the package boundary documentation before deciding where new code belongs.
+See [Repository configuration](./CONFIGURATION.md) before adding or moving
+tool configuration.
 
 ## Local setup
 

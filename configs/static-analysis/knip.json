@@ -4,10 +4,10 @@
     ".": {},
     "apps/web": {},
     "packages/core": {},
-    "packages/shared": {},
     "packages/game-state": {
       "ignoreDependencies": ["react", "@types/react"]
     },
+    "packages/shared": {},
     "packages/ui": {
       "ignoreDependencies": ["react", "@types/react"]
     }

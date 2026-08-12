@@ -12,13 +12,13 @@
     "dev": "pnpm --filter @mine-sweeper/web dev",
     "typecheck": "pnpm -r run typecheck",
     "build": "pnpm --filter @mine-sweeper/web build",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "eslint .",
-    "test": "vitest run",
-    "test:e2e": "playwright test",
-    "check:architecture": "depcruise --config dependency-cruiser.config.mjs apps packages",
-    "check:unused": "knip",
+    "format": "prettier --config configs/code-quality/prettier.config.js --ignore-path configs/code-quality/prettier.ignore --write .",
+    "format:check": "prettier --config configs/code-quality/prettier.config.js --ignore-path configs/code-quality/prettier.ignore --check .",
+    "lint": "eslint --config configs/code-quality/eslint.config.js .",
+    "test": "vitest run --config configs/testing/vitest.config.ts",
+    "test:e2e": "playwright test --config configs/testing/playwright.config.ts",
+    "check:architecture": "depcruise --config configs/static-analysis/dependency-cruiser.config.mjs apps packages",
+    "check:unused": "knip --config configs/static-analysis/knip.json",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:architecture && pnpm check:unused && pnpm test && pnpm build",
     "prepare": "husky"
   },
@@ -27,11 +27,11 @@
   "license": "ISC",
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint --config configs/code-quality/eslint.config.js --fix",
+      "prettier --config configs/code-quality/prettier.config.js --ignore-path configs/code-quality/prettier.ignore --write"
     ],
     "*.{json,md,yml,yaml,html,css}": [
-      "prettier --write"
+      "prettier --config configs/code-quality/prettier.config.js --ignore-path configs/code-quality/prettier.ignore --write"
     ]
   },
   "devDependencies": {
